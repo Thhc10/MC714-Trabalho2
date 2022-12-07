@@ -96,10 +96,10 @@ def critical_section():
     with cs_lock:
         if has_token == 1:
             in_cs = 1
-            print("O processo %d e executa %d Critical Selection." % (tid, RN[tid]))
+            print("O processo %d e executa %d Critical Section." % (tid, RN[tid]))
             sys.stdout.flush()
             sleep(random.uniform(2, 5))
-            print("O processo %d finaliza %d Critical Selection." % (tid, RN[tid]))
+            print("O processo %d finaliza %d Critical Section." % (tid, RN[tid]))
             sys.stdout.flush()
             in_cs = 0
             release_cs()
