@@ -15,7 +15,7 @@ Em que abordamos três implementações de algoritmos referentes a sistemas dist
 
 ## Requerimentos
 
-Para utilização dos algoritmos de Lamport TimeStamp e Mutal Exclusion Suzuki-Kasami, é requerido Python3 e os seguintes pacotes:
+Para utilização dos algoritmos de Lamport TimeStamp e Mutual Exclusion Suzuki-Kasami, é requerido Python3 e os seguintes pacotes:
 ```bash
 sudo apt install libopenmpi-dev -y
 sudo apt install python3-pip -y
@@ -27,52 +27,39 @@ Para utilização do Bully Algorithm, apenas é requerido Go:
 sudo apt install golang -y
 ```
 
-### Local without Docker Containers
+### Uso
 
-The complete list of flags is:
-
-```bash
-$ python3 run.py -h                                                     
-
-usage: run.py [-h] [-v] [-d] [-a {ring,bully}] [-c CONFIG_FILE]  
-
-Implementation of distributed election algorithms. Generic node.  
-
-optional arguments:   
-    -h, --help            show this help message and exit   
-    -v, --verbose         increase output verbosity   
-    -d, --delay           generate a random delay to forwarding messages   
-    -a {ring,bully}, --algorithm {ring,bully}                         
-                            ring by default   
-    -c CONFIG_FILE, --config_file CONFIG_FILE
-                            needed a config file in json format
-```
-
-The _local_config.json_ (in _SDCC/sdcc_) file has been defined to manage all network settings (i.e., IP addresses, port numbers). To display the options set:
+Os algoritmos de Lamport e Suzuki-Kasami seguem o mesmo modelo de execução, aonde numProcess é o número de processos presente na dinâmica.
 
 ```bash
-python3 run.py -h
+mpirun -mca btl ^openib -np numProcess python3 timestampLamport.py
+mpirun -mca btl ^openib -np numProcess python3 meSuzukiKasami.py
 ```
-
-Firstly you make running the register node:
-
+Exemplificando:
+Desejo executar o timestampLamport com 4 processos, ficará assim:
 ```bash
-# to execute in SDCC/sdcc/register. The -v flag provides a verbose execution (i.e., all messages received and sent are shown)
-python3 run.py -v -c ../local_config.json
+mpirun -mca btl ^openib -np 4 python3 timestampLamport.py
 ```
 
-A single node can be executed as:
-
+Já para execução do Bully, é simples:
 ```bash
-# to execute in SDCC/sdcc/node. Without the '-a bully' option node runs the ring-based alg.
-python3 run.py -v -a bully -c ../local_config.json
+go run bullyAlgorithm.go
+```
+Único ponto que devemos nos atentar é o seguinte trecho:
+```
+var bully = BullyAlgorithm{
+	my_id: 		1,
+	coordinator_id: 4,
+	ids_ip: 	map[int]string{	1:"10.128.0.5:3030", 2:"10.128.0.6:3030", 3:"10.128.0.7:3030", 4:"10.128.0.8:3030"}}
+```
+Neste exemplo estabeleci a conversa entre os 4 sockets, se for desejável mudar a quantidade de IDs basta mudar a variável coordinator_id e também colocar os sockets referente a sua realidade.
+
+
+Também é possível executar esse código de maneira local, apenas mudando será necessário identificar as portas, exemplifica-se:
+```
+var bully = BullyAlgorithm{
+	my_id: 		1,
+	coordinator_id: 4,
+	ids_ip: 	map[int]string{	1:"127.0.0.1:3030", 2:"127.0.0.1:3031", 3:"127.0.0.1:3032", 4:"127.0.0.1:3033"}}
 ```
 
-#### Tests
-
-Test execution can be handled as:
-
-```python
-# to execute in SDCC/sdcc
-sudo python3 run_tests.py
-```
