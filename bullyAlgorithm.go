@@ -124,8 +124,7 @@ func makeYourselfCoordinator(){
 var bully = BullyAlgorithm{
 	my_id: 		1,
 	coordinator_id: 4,
-	ids_ip: 	map[int]string{	1:"10.128.0.5:3030", 2:"10.128.0.6:3030", 3:"10.128.0.7:3030", 4:"34.172.92.62:3030"}
-	}
+	ids_ip: 	map[int]string{	1:"10.128.0.5:3030", 2:"10.128.0.6:3030", 3:"10.128.0.7:3030", 4:"10.128.0.8:3030"}}
 
 
 func main(){
