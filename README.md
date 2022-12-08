@@ -13,7 +13,7 @@ Em que abordamos três implementações de algoritmos referentes a sistemas dist
 2. Mutal Exclusion Suzuki-Kasami
 3. Bully Algorithm
 
-## Requerimentos
+## Requisitos
 
 Para utilização dos algoritmos de Lamport TimeStamp e Mutual Exclusion Suzuki-Kasami, é requerido Python3 e os seguintes pacotes:
 ```bash
